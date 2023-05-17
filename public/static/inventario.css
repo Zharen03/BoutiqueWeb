@@ -1,0 +1,126 @@
+body {
+    background-color: #FCEFE6;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+#titulo{
+    color: #365140;
+}
+
+#divTabla{
+    margin-top: 3%;
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: left;
+}
+
+#tablaProductos{
+    background-color: white;
+    margin-top: 3%;
+}
+
+.btnAgregar {
+    background-color: #FF8C7D;
+    border: 0px;
+    border-radius: 20px;
+    color: white;
+    font-weight: bold;
+}
+
+.btnAgregar:active {
+  background: white;
+  color: #FF8C7D;
+}
+
+.btnAgregar:hover {
+  background: white;
+  color: #FF8C7D;
+}
+
+.btnCancelar {
+    background-color: #365140;
+    border: 0px;
+    border-radius: 20px;
+    color: white;
+    font-weight: bold;
+}
+
+.btnCancelar:active {
+  background: white;
+  color: #365140;
+}
+
+.btnCancelar:hover {
+  background: white;
+  color: #365140;
+}
+
+#exampleModalLabel{
+    color: #E11E4D;
+}
+
+.btnVer{
+    padding: 0;
+    border: none;
+    background: none;
+}
+
+#nombreProveedorEditar{
+    color: #E11E4D;
+}
+
+.btnEditar{
+    padding: 0;
+    border: none;
+    background: none;
+}
+
+.btnBorrar{
+    padding: 0;
+    border: none;
+    background: none;
+}
+
+#nombreProductoBorrar{
+    color: #E11E4D;
+}
+
+/*V A L I D A C I O N E S*/
+.validation{
+    display: none;
+    color: #ff3636;
+}
+
+.validation-activo{
+    display: block;
+    color: #ff3636;
+}
+
+.validation-descripcion{
+    display: none;
+    color: #ff3636;
+}
+
+.validation-descripcion-activo{
+    display: block;
+    color: #ff3636;
+}
+
+.formulario__grupo-incorrecto > input{
+    border: 3px solid rgba(255, 54, 54, 1);
+    background-color: rgba(255, 54, 54, 0.2);
+    box-shadow: 3px 0px 30px rgba(255, 54, 54, 0.2);
+}
+
+.formulario__grupo-incorrecto > input:focus{
+    border: 3px solid rgba(255, 54, 54, 1);
+    background-color: rgba(255, 54, 54, 0.2);
+    box-shadow: 3px 0px 30px rgba(255, 54, 54, 0.2);
+}
+

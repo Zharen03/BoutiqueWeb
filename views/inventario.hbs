@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Last-Modified" content="0">
+    <meta http-equiv="Cache-Control" content="no-cache, mustrevalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css"
+          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="\static\inventario.css">
+    <link rel="stylesheet" href="\static\Navs.css">
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>UNIK Boutique - Inventario</title>
+</head>
+
+<body>
+
+<nav id="navMenu" class="navbar navbar-expand-lg">
+    <a class="navbar-brand" href="/UNIKBoutique/indexAdmin">UNIK Boutique</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+    </div>
+</nav>
+
+<div id="divTabla">
+    <div class="row">
+        <h2 id="titulo" class="col-10">Lista de productos</h2>
+        <button class="col-2 btnAgregar" data-toggle="modal" data-target="#modalAgregarProducto">Agregar Producto
+        </button>
+    </div>
+
+    <div class="row mt-3 ml-1 d-flex">
+        <div class="d-flex" role="search">
+            <input id="iFiltro" class="form-control me-2" type="text" placeholder="Buscar">
+            <button id="btnFiltro" class="btn btnAgregar mx-3" onclick="filtro()" type="submit">Buscar</button>
+        </div>
+    </div>
+
+    <table class="table" id="tablaProductos">
+        <thead>
+        <tr style="color: #365140">
+            <th>ID producto</th>
+            <th>Nombre producto</th>
+            <th>Precio compra</th>
+            <th>Precio venta</th>
+            <th>Categoría</th>
+            <th style="text-align: center;" id="ver">Ver</th>
+            <th style="text-align: center;" id="eliminar">Eliminar</th>
+            <th style="text-align: center;" id="editar">Editar</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{#each productos}}
+            <tr>
+                <td>{{id}}</td>
+                <td>{{nombre}}</td>
+                <td>{{precioCompra}}</td>
+                <td>{{precioFinal}}</td>
+                <td>{{categoria}}</td>
+                <td style="text-align: center;">
+                    <button data-toggle="modal" data-target="#modalVerProducto-{{id}}" class="btnVer">
+                        <img id="btnVer" src="\static\Image\ver.png" class="mx-auto d-block">
+                    </button>
+                </td>
+                <td style="text-align: center;">
+                    <button data-toggle="modal" data-target="#modalBorrarProducto" class="btnBorrar">
+                        <img id="btnBorrar-{{id}}" onclick="borrar(this.id)" src="\static\Image\borrar.png" class="mx-auto d-block">
+                    </button>
+                </td>
+                <td style="text-align: center;">
+                    <button data-toggle="modal" data-target="#modalEditarProducto-{{id}}" class="btnEditar">
+                        <img id="btnEdit" src="\static\Image\editar.png" class="mx-auto d-block">
+                    </button>
+                </td>
+            </tr>
+        {{/each}}
+        </tbody>
+    </table>
+</div>
+
+
+<div class="modal fade bd-example-modal-lg" id="modalAgregarProducto" tabindex="-1" role="dialog"
+     aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Agregar Producto</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form class="needs-validation" novalidate id="formulario">
+                    <div class="form-row">
+                        <div class="col-2">
+                            <label for="idProducto">ID de Producto</label>
+                            <input name="idProducto" id="idProducto" type="text" class="form-control"
+                                   placeholder="{{nextID}}" disabled>
+                        </div>
+                        <div class="col-4" id="grupo__nombre">
+                            <label for="nombreProducto">Nombre de Producto</label>
+                            <input name="nombreProducto" id="nombreProducto" type="text" class="form-control"
+                                   placeholder="Nombre de Prodcuto" required>
+                            <small class="validation">
+                                El nombre del producto es obligatorio y solo debe contener letras.
+                            </small>
+                        </div>
+                        <div class="col-6" id="grupo__descripcion">
+                            <label for="DescProducto">Descripción</label>
+                            <input name="DescProducto" id="DescProducto" type="text" class="form-control" placeholder="Descripción">
+                            <small class="validation">
+                                La descripción es obligatoria y solo debe contener letras.
+                            </small>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="form-row">
+                        <div class="col-3" id="grupo__precioCompra">
+                            <label for="PrecioCompra">Precio Compra</label>
+                            <input name="PrecioCompra" id="PrecioCompra" type="number" class="form-control" placeholder="Precio Compra">
+                            <small class="validation">
+                                El precio es obligatorio y solo debe de contener números positivos.
+                            </small>
+                        </div>
+                        <div class="col-3" id="grupo__precioVenta">
+                            <label for="PrecioVenta">Precio Venta</label>
+                            <input name="PrecioVenta" id="PrecioVenta" type="number" class="form-control" placeholder="Precio Venta">
+                            <small class="validation">
+                                El precio es obligatorio y solo debe de contener números positivos.
+                            </small>
+                        </div>
+                        <div class="col-3" id="grupo__cantidad">
+                            <label for="cantidadPiezas">Cantidad Piezas</label>
+                            <input name="cantidadPiezas" id="cantidadPiezas" type="number" class="form-control" placeholder="Cantidad Piezas">
+                            <small class="validation">
+                                La cantidad es obligatorio y solo debe de contener números positivos.
+                            </small>
+                        </div>
+                        <div class="col-3">
+                            <label for="categoria">Categoría</label>
+                            <select id="categoria" class="form-control">
+                                <option>Ropa</option>
+                                <option>Acesorios</option>
+                                <option>Bolsos</option>
+                            </select>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="form-row">
+                        <div class="col-3">
+                            <label for="tallaProducto">Talla</label>
+                            <select id="tallaProducto" class="form-control">
+                                <option>No aplica</option>
+                                <option>XS</option>
+                                <option>S</option>
+                                <option>M</option>
+                                <option>L</option>
+                                <option>XL</option>
+                            </select>
+                        </div>
+                        <!--<div class="col-9">
+                            <label for="ImagenProducto">Imagen</label>
+                            <input id="ImagenProducto" type="text" class="form-control" placeholder="Imagen">
+                        </div>-->
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btnCancelar" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btnAgregar" id="btnGuardarAdd">Guardar</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{{#each productos}}
+<div class="modal fade bd-example-modal-lg" id="modalVerProducto-{{id}}" tabindex="-1" role="dialog"
+     aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabelVer">{{nombre}}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-row">
+                        <div class="col-6">
+                            <label for="nombreProductoVer">Nombre de Producto</label>
+                            <input id="nombreProductoVer" type="text" class="form-control"
+                                   placeholder="{{nombre}}" disabled>
+                        </div>
+                        <div class="col-6">
+                            <label for="DescProductoVer">Descripción</label>
+                            <input id="DescProductoVer" type="text" class="form-control" placeholder="{{desc}}" disabled>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="form-row">
+                        <div class="col-3">
+                            <label for="PrecioCompraVer">Precio Compra</label>
+                            <input id="PrecioCompraVer" type="number" class="form-control" placeholder="{{precioCompra}}" disabled>
+                        </div>
+                        <div class="col-3">
+                            <label for="PrecioVentaVer">Precio Venta</label>
+                            <input id="PrecioVentaVer" type="number" class="form-control" placeholder="{{precioFinal}}" disabled>
+                        </div>
+                        <div class="col-3">
+                            <label for="cantidadPiezasVer">Cantidad Piezas</label>
+                            <input id="cantidadPiezasVer" type="number" class="form-control" placeholder="{{cantidad}}" disabled>
+                        </div>
+                        <div class="col-3">
+                            <label for="categoriaVer">Categoría</label>
+                            <select id="categoriaVer" class="form-control" disabled>
+                                <option>{{categoria}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="form-row">
+                        <div class="col-3">
+                            <label for="tallaProductoVer">Talla</label>
+                            <select id="tallaProductoVer" class="form-control" disabled>
+                                <option>{{talla}}</option>
+                            </select>
+                        </div>
+                        <!--<div class="col-9">
+                            <label for="ImagenProductoVer">Imagen</label>
+                            <input id="ImagenProductoVer" type="text" class="form-control" placeholder="Imagen" disabled>
+                        </div>-->
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btnCancelar" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{/each}}
+
+<div class="modal fade" id="modalBorrarProducto" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="nombreProductoBorrar">Eliminar Producto</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                ¿Desea eliminar permanentemente a este Producto?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btnCancelar" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btnAgregar">Eliminar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{#each productos}}
+<div class="modal fade bd-example-modal-lg" id="modalEditarProducto-{{id}}" tabindex="-1" role="dialog"
+     aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabelEditar">Editar Producto</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form class="needs-validation" novalidate id="formularioEditar">
+                    <div class="form-row">
+                        <div class="col-6" id="grupo__nombre-editar">
+                            <label for="nombreProductoEditar">Nombre de Producto</label>
+                            <input name="nombreProductoEditar" id="nombreProductoEditar-{{id}}" type="text" class="form-control"
+                                   placeholder="Nombre de Prodcuto" value="{{nombre}}">
+                            <small class="validation">
+                                El nombre del producto es obligatorio y solo debe contener letras.
+                            </small>
+                        </div>
+                        <div class="col-6" id="grupo__descripcion-editar">
+                            <label for="DescProductoEditar">Descripción</label>
+                            <input name="DescProductoEditar" id="DescProductoEditar-{{id}}" type="text" class="form-control"
+                                   placeholder="Descripción" value="{{desc}}">
+                            <small class="validation">
+                                La descripción es obligatoria y solo debe contener letras.
+                            </small>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="form-row">
+                        <div class="col-3" id="grupo__precioCompra-editar">
+                            <label for="PrecioCompraEditar">Precio Compra</label>
+                            <input name="PrecioCompraEditar" id="PrecioCompraEditar-{{id}}" type="number" class="form-control" value="{{precioCompra}}">
+                            <small class="validation">
+                                El precio es obligatorio y solo debe de contener números positivos.
+                            </small>
+                        </div>
+                        <div class="col-3" id="grupo__precioVenta-editar">
+                            <label for="PrecioVentaEditar">Precio Venta</label>
+                            <input name="PrecioVentaEditar" id="PrecioVentaEditar-{{id}}" type="number" class="form-control" value="{{precioFinal}}">
+                            <small class="validation">
+                                El precio es obligatorio y solo debe de contener números positivos.
+                            </small>
+                        </div>
+                        <div class="col-3" id="grupo__cantidad-editar">
+                            <label for="cantidadPiezasEditar">Cantidad Piezas</label>
+                            <input name="cantidadPiezasEditar" id="cantidadPiezasEditar-{{id}}" type="number" class="form-control" value="{{cantidad}}">
+                            <small class="validation">
+                                La cantidad es obligatorio y solo debe de contener números positivos.
+                            </small>
+                        </div>
+                        <div class="col-3">
+                            <label for="categoriaEditar">Categoría</label>
+                            <select id="categoriaEditar-{{id}}" class="form-control">
+                                <option>Ropa</option>
+                                <option>Acesorios</option>
+                                <option>Bolsos</option>
+                            </select>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="form-row">
+                        <div class="col-3">
+                            <label for="tallaProductoEditar">Talla</label>
+                            <select id="tallaProductoEditar-{{id}}" class="form-control">
+                                <option>No aplica</option>
+                                <option>XS</option>
+                                <option>S</option>
+                                <option>M</option>
+                                <option>L</option>
+                                <option>XL</option>
+                            </select>
+                        </div>
+                        <!--<div class="col-9">
+                            <label for="ImagenProductoEditar">Imagen</label>
+                            <input id="ImagenProductoEditar-{{id}}" type="text" class="form-control" placeholder="Imagen">
+                        </div>-->
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btnCancelar" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btnAgregar" id="btnGuardarEditar-{{id}}" onclick="editarProd(this.id)">Guardar</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+{{/each}}
+
+</body>
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.3/dist/umd/popper.min.js"
+        integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/js/bootstrap.min.js"
+        integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+        crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+<script>
+
+    const expresiones = {
+        nombreDeProducto: /^[a-zA-ZÀ-ÿ\s]+$/, // Letras, espacios y acentos.
+        descripcionDeProducto: /^[a-zA-ZÀ-ÿ\s]{1,40}$/, // Letras y espacios, pueden llevar acentos.
+        precios: /^\d.+$/, // Solo números mayores a 0 y decimales
+        preciosCantidad: /^\d+$/, // Solo números mayores a 0
+    }
+
+    $('#btnGuardarAdd').click(function add(){
+        var nombre = $('#nombreProducto').val();
+        var desc = $('#DescProducto').val();
+        var precioCompra =  $('#PrecioCompra').val();
+        var precioVenta = $('#PrecioVenta').val();
+        var cantidadPiezas = $('#cantidadPiezas').val();
+        var categoria = $('#categoria').val();
+
+        var talla = $(`#tallaProducto`).val();
+        var inpImagen = $('#imagenProducto')
+        var imgs = []
+
+        if(parseInt(precioCompra) > 0 && parseInt(precioVenta)> 0 && parseInt(precioVenta) > parseInt(precioCompra) && cantidadPiezas > 0 && expresiones.nombreDeProducto.test(nombre)
+        && expresiones.descripcionDeProducto.test(desc)) {
+            $.ajax({
+                url: 'addProducto',
+                data: {
+                    "nombre": nombre,
+                    "desc": desc,
+                    "pc": precioCompra,
+                    "pf": precioVenta,
+                    "imagen_producto": "./static/Image/TEST.jpg",
+                    "cantidad": cantidadPiezas,
+                    "categoria": categoria,
+                    "talla": talla
+                },
+                type: 'post',
+                dataType: 'json',
+                success: function (result) {
+                    console.log("funciono")
+                },
+                error: function (result) {
+                    console.log("no funciono :(")
+                }
+            });
+            location.reload();
+        }
+    });
+
+    function editarProd(id) {
+        const pid = id.split("-")[1]
+        var nombre = $(`#nombreProductoEditar-${pid}`).val();
+        var desc = $(`#DescProductoEditar-${pid}`).val();
+        var precioCompra =  $(`#PrecioCompraEditar-${pid}`).val();
+        var precioVenta = $(`#PrecioVentaEditar-${pid}`).val();
+        var cantidadPiezas = $(`#cantidadPiezasEditar-${pid}`).val();
+        var categoria = $(`#categoriaEditar-${pid}`).val();
+        var talla = $(`#tallaProductoEditar-${pid}`).val();
+
+        var inpImagen = $('#imagenProducto')
+        var imgs = []
+
+        if(parseInt(precioCompra) > 0 && parseInt(precioVenta)> 0 && parseInt(precioVenta) > parseInt(precioCompra) && cantidadPiezas > 0 && expresiones.nombreDeProducto.test(nombre)
+                && expresiones.descripcionDeProducto.test(desc)) {
+            console.log(`${precioCompra} < ${precioVenta}`)
+            $.ajax({
+                url: 'updProducto',
+                data: {
+                    "pid": pid,
+                    "nombre": nombre,
+                    "desc": desc,
+                    "pc": precioCompra,
+                    "pf": precioVenta,
+                    "imagen_producto": "./static/Image/TEST.jpg",
+                    "cantidad": cantidadPiezas,
+                    "categoria": categoria,
+                    "talla": talla
+
+                },
+                type: 'post',
+                dataType: 'json',
+                success: function (result) {
+                    console.log("funciono")
+                },
+                error: function (result) {
+                    console.log("no funciono :(")
+                }
+            });
+            location.reload();
+        }
+    }
+
+    const formulario = document.getElementById('formulario');
+    const inputs = document.querySelectorAll('#formulario input');
+
+    const formularioEditar = document.getElementById('formularioEditar');
+    const inputsEditar = document.querySelectorAll('#formularioEditar input');
+
+
+
+    const validarFormulario = (e) => {
+        console.log(e.target.name)
+        switch (e.target.name){
+            case "nombreProducto":
+                if (expresiones.nombreDeProducto.test(e.target.value)){
+                    document.getElementById('grupo__nombre').classList.remove('formulario__grupo-incorrecto');
+                    document.querySelector('#grupo__nombre .validation').classList.remove('validation-activo');
+                }else{
+                    document.getElementById('grupo__nombre').classList.add('formulario__grupo-incorrecto');
+                    document.querySelector('#grupo__nombre .validation').classList.add('validation-activo');
+                }
+                break;
+            case "DescProducto":
+                if (expresiones.descripcionDeProducto.test(e.target.value)) {
+                    document.getElementById('grupo__descripcion').classList.remove('formulario__grupo-incorrecto');
+                    document.querySelector('#grupo__descripcion .validation').classList.remove('validation-activo');
+                }else {
+                    document.getElementById('grupo__descripcion').classList.add('formulario__grupo-incorrecto');
+                    document.querySelector('#grupo__descripcion .validation').classList.add('validation-activo');
+                }
+                break;
+            case "PrecioCompra":
+                if (expresiones.precios.test(e.target.value)) {
+                    document.getElementById('grupo__precioCompra').classList.remove('formulario__grupo-incorrecto');
+                    document.querySelector('#grupo__precioCompra .validation').classList.remove('validation-activo');
+                }else {
+                    document.getElementById('grupo__precioCompra').classList.add('formulario__grupo-incorrecto');
+                    document.querySelector('#grupo__precioCompra .validation').classList.add('validation-activo');
+                }
+                break;
+            case "PrecioVenta":
+                if (expresiones.precios.test(e.target.value)) {
+                    document.getElementById('grupo__precioVenta').classList.remove('formulario__grupo-incorrecto');
+                    document.querySelector('#grupo__precioVenta .validation').classList.remove('validation-activo');
+                }else {
+                    document.getElementById('grupo__precioVenta').classList.add('formulario__grupo-incorrecto');
+                    document.querySelector('#grupo__precioVenta .validation').classList.add('validation-activo');
+                }
+                break;
+            case "cantidadPiezas":
+                if (expresiones.preciosCantidad.test(e.target.value)) {
+                    document.getElementById('grupo__cantidad').classList.remove('formulario__grupo-incorrecto');
+                    document.querySelector('#grupo__cantidad .validation').classList.remove('validation-activo');
+                }else {
+                    document.getElementById('grupo__cantidad').classList.add('formulario__grupo-incorrecto');
+                    document.querySelector('#grupo__cantidad .validation').classList.add('validation-activo');
+                }
+                break;
+        }
+    }
+
+    inputs.forEach((input) => {
+        input.addEventListener('keyup', validarFormulario);
+        input.addEventListener('blur', validarFormulario);
+    });
+
+    const validarFormularioEditar = (e) => {
+        console.log(e.target.name)
+        switch (e.target.name){
+            case "nombreProductoEditar":
+                if (expresiones.nombreDeProducto.test(e.target.value)){
+                    document.getElementById('grupo__nombre-editar').classList.remove('formulario__grupo-incorrecto');
+                    document.querySelector('#grupo__nombre-editar .validation').classList.remove('validation-activo');
+                }else{
+                    document.getElementById('grupo__nombre-editar').classList.add('formulario__grupo-incorrecto');
+                    document.querySelector('#grupo__nombre-editar .validation').classList.add('validation-activo');
+                }
+                break;
+            case "DescProductoEditar":
+                if (expresiones.descripcionDeProducto.test(e.target.value)) {
+                    document.getElementById('grupo__descripcion-editar').classList.remove('formulario__grupo-incorrecto');
+                    document.querySelector('#grupo__descripcion-editar .validation').classList.remove('validation-activo');
+                }else {
+                    document.getElementById('grupo__descripcion-editar').classList.add('formulario__grupo-incorrecto');
+                    document.querySelector('#grupo__descripcion-editar .validation').classList.add('validation-activo');
+                }
+                break;
+            case "PrecioCompraEditar":
+                if (expresiones.precios.test(e.target.value)) {
+                    document.getElementById('grupo__precioCompra-editar').classList.remove('formulario__grupo-incorrecto');
+                    document.querySelector('#grupo__precioCompra-editar .validation').classList.remove('validation-activo');
+                }else {
+                    document.getElementById('grupo__precioCompra-editar').classList.add('formulario__grupo-incorrecto');
+                    document.querySelector('#grupo__precioCompra-editar .validation').classList.add('validation-activo');
+                }
+                break;
+            case "PrecioVentaEditar":
+                if (expresiones.precios.test(e.target.value)) {
+                    document.getElementById('grupo__precioVenta-editar').classList.remove('formulario__grupo-incorrecto');
+                    document.querySelector('#grupo__precioVenta-editar .validation').classList.remove('validation-activo');
+                }else {
+                    document.getElementById('grupo__precioVenta-editar').classList.add('formulario__grupo-incorrecto');
+                    document.querySelector('#grupo__precioVenta-editar .validation').classList.add('validation-activo');
+                }
+                break;
+            case "cantidadPiezasEditar":
+                if (expresiones.precios.test(e.target.value)) {
+                    document.getElementById('grupo__cantidad-editar').classList.remove('formulario__grupo-incorrecto');
+                    document.querySelector('#grupo__cantidad-editar .validation').classList.remove('validation-activo');
+                }else {
+                    document.getElementById('grupo__cantidad-editar').classList.add('formulario__grupo-incorrecto');
+                    document.querySelector('#grupo__cantidad-editar .validation').classList.add('validation-activo');
+                }
+                break;
+        }
+    }
+
+    inputsEditar.forEach((inputE) => {
+        inputE.addEventListener('keyup', validarFormularioEditar);
+        inputE.addEventListener('blur', validarFormularioEditar);
+    });
+
+    var id = document.getElementById("nombreProducto");
+
+    function borrar(id){
+        let idProd = id.split("-")[1];
+
+        console.log(idProd)
+        $.ajax({
+            url:'/delProducto',
+            data: {
+                "pid":idProd
+            },
+            type:'post',
+            dataType: 'json',
+            success: function (result){
+                console.log(result);
+            },
+            error: function (result){
+                console.log(result + "  :(");
+            }
+        });
+        location.reload();
+    }
+
+    /*
+    function filtro(){
+        let filtro = $('#iFiltro').val();
+        location.href = 'http://127.0.0.1:8000/UNIKBoutique/inventarioAdmin/'+filtro;
+    }*/
+
+</script>
+
+<script type="text/javascript">
+
+</script>
+</html>

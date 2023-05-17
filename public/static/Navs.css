@@ -1,0 +1,34 @@
+
+#navBar {
+    background-color: #E11E4D;
+}
+
+#navMenu {
+    background-color: #EEBBB7;
+    color: #E11E4D;
+}
+
+.nav-link,.navbar-brand {
+    color: #FCEFE6;
+}
+
+.nav-link:hover,.navbar-brand:hover {
+    color: #E11E4D;
+}
+
+.navbar-brand {
+    margin-left: 5%;
+}
+
+.navbar-toggler{
+    border-color: #E11E4D;
+}
+
+#navbarNav{
+    justify-content: right;
+    margin-right: 5%;
+}
+
+#usuariosNav{
+
+}
