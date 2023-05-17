@@ -44,7 +44,7 @@ app.post('/addProducto', function (req, res){
 
 app.post('/delProducto', function (req, res){
     pid = req.body.pid;
-    if(listado[pid]){
+    if(pid in listado){
         delete listado[pid];
     }
     guardarDB(listadoProductos());
